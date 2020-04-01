@@ -1,5 +1,7 @@
 from __future__ import print_function
 from calibre.customize.conversion import OutputFormatPlugin
+from calibre.ptempfile import PersistentTemporaryDirectory
+import os, re, shutil
 
 class ComicOutputPlugin(OutputFormatPlugin):
     name = 'Comic Output Plugin'
@@ -11,4 +13,9 @@ class ComicOutputPlugin(OutputFormatPlugin):
     file_type = 'cbz'
 
     def convert(self, oeb_book, output_path, input_plugin, opts, log):
-        print('Hello world')
+        from calibre.utils import zipfile
+        from templite import Templite
+
+        tempdir = os.path.realpath(PersistentTemporaryDirectory())
+
+        log.info('Creating temp dir ' + tempdir)
