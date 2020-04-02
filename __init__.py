@@ -24,14 +24,24 @@ class ComicOutputPlugin(OutputFormatPlugin):
 
         log.info('Creating temp dir ' + tempdir)
 
-        page_no = 0
-
         with CurrentDir(tempdir):
+            cover_ref = None
+            cover_ext = None
+
+            if oeb_book.guide['cover'] is not None:
+                cover_ref = oeb_book.guide['cover'].href
+                orig_name, file_extension = os.path.splitext(cover_ref)
+                cover_ext = file_extension
+                
             for item in oeb_book.manifest:
                 if item.media_type in image_types:
                     log.info('Found image ' + item.id + ' ' + item.media_type + ' ' + item.href)
 
-                    file_name = os.path.join(tempdir, os.path.basename(item.href))
+                    if cover_ref is not None and item.href == cover_ref:
+                        file_name = os.path.join(tempdir, '00000' + cover_ext)
+                    else:
+                        file_name = os.path.join(tempdir, os.path.basename(item.href))
+
                     with open(file_name, 'wb') as image:
                         image.write(item.data)
 
