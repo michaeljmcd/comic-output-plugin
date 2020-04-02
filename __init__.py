@@ -38,10 +38,8 @@ class ComicOutputPlugin(OutputFormatPlugin):
         log.info('Finished extracting images, repackaging them as CBZ ' + output_path)
 
         zfile = zipfile.ZipFile(output_path, mode="w")
-        zfile.add_dir(tempdir, '/')
+        zfile.add_dir(tempdir)
         log.info('Added files. Preparing to compress.')
-
-        zfile.write(output_path, os.path.basename(output_path), zipfile.ZIP_DEFLATED)
 
         log.info('Cleaning up temp dir...')
         shutil.rmtree(tempdir)
